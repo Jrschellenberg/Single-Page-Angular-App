@@ -1,11 +1,12 @@
-<div class="grid-100 row controls">
+<div ng-controller="RecipesController" class="grid-100 row controls">
   <div class="grid-30">
     <!-- TODO Add directives to the select elememt in order to 
       populate the list with the categories from the database.
       You'll also need to add directives to handle when the user 
       selects a new category so that you can refresh the recipes list. -->
-    <select>
+    <select ng-model="recipe.category">
       <option value="">All Categories</option>
+      <option ng-repeat="category in categories" value="{{category.name}}">{{category.name}}</option>
     </select>
   </div>
   <div class="grid-70">
