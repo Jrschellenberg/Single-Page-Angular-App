@@ -1,7 +1,19 @@
 angular.module("app", ['ngRoute'])
-	.controller('RecipesController', function($scope, dataService){
+	.controller('RecipesController', function($scope, dataService, $location){
+				
+		/*
+		Used to change the route Path.
+		 */
+		$scope.addRecipe = function( ){
+			$location.path('/add');
+		};
 		
-		
+		$scope.detectChange = function(){
+			//console.log("detected Change");
+			console.log($scope.recipes.category);
+			$scope.recipes.catetory = false;
+			
+		};
 		
 		dataService.getCategories(function(response){
 			//console.log(response.data);
@@ -15,8 +27,18 @@ angular.module("app", ['ngRoute'])
 		});
 		
 		
+		
+		
 	})
-	.controller('RecipeDetailController', function($scope){
+	.controller('RecipeDetailController', function($scope, $location){
+		console.log("hit the Recipe Detail Controller?");
+		/*
+		 Used to change the route Path.
+		 */
+		$scope.returnHome = function(){
+			$location.path('/');
+		};
+		
 		
 		
 	})
