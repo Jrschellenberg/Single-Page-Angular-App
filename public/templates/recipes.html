@@ -1,4 +1,4 @@
-<div ng-controller="RecipesController" class="grid-100 row controls">
+<div class="grid-100 row controls">
   <div class="grid-30">
     <!-- TODO Add directives to the select elememt in order to 
       populate the list with the categories from the database.
@@ -21,7 +21,7 @@
 
 <!-- TODO Add a directive to this div element so that it only displays
   when there are no recipes to display. -->
-<div class="grid-100 row">
+<div ng-hide="isRecipes" class="grid-100 row">
   <div class="grid-70">
     <p>No recipes found!</p>
   </div>
@@ -30,13 +30,13 @@
 <!-- TODO Add a directive to this div element so that it repeats 
   for each recipe to display. Also, add a directive to this div element 
   so that it only displays when there are recipes to display. -->
-<div class="grid-100 row addHover">
+<div ng-repeat="recipe in recipes" ng-show="isRecipes" class="grid-100 row addHover">
   <!-- TODO Replace this anchor element's href attribute with a 
     directive so that you can route the user to the Recipe Detail 
     screen when they click on a row. -->
-  <a href="#">
+  <a href="localhost:5000/#!/edit/{{recipe._id}}">
     <div class="grid-70">
-      <p>
+      <p> {{recipe.name}}
         <!-- TODO Add binding expressions here in order to 
           display information about the recipe. -->
       </p>
