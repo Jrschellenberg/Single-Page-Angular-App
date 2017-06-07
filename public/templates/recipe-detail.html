@@ -1,4 +1,4 @@
-<div class="grid-100 row controls" ng-init="onLoad()" ng-model="isEdit]" ng-readonly="isReadOnly">
+<div class="grid-100 row controls" ng-init="onLoad()" ng-model="isEdit" >
   <div class="grid-50">
     <!-- TODO Add a binding expression to display the recipe name 
       when editing a recipe. When adding a recipe, display the 
@@ -9,7 +9,7 @@
     <div class="flush-right">
       <!-- TODO Add directives to both the "Save Recipe" and "Cancel"
         buttons in order to handle user clicks. -->
-      <button>Save Recipe</button>
+      <button ng-if="!isReadOnly">Save Recipe</button>
       <button class="secondary" ng-click="returnHome()">Cancel</button>
     </div>
   </div>
@@ -38,11 +38,11 @@
       <label> Name </label>
     </p>
   </div>
-  <div class="grid-40" >
+  <div class="grid-40"  >
     <p>
       <!-- TODO Add a directive to this input element to bind its value 
         to the recipe model's `name` property. -->
-      <input type="text" value="{{isEdit ? recipeEditing.name : ''}}">
+      <input type="text" value="{{isEdit ? recipeEditing.name : ''}}" ng-readonly="isReadOnly">
     </p>
   </div>
 </div>
@@ -58,7 +58,7 @@
     <p>
       <!-- TODO Add a directive to this textarea element to bind its content 
         to the recipe model's `description` property. -->
-      <textarea>{{isEdit ? recipeEditing.description : ''}} </textarea>
+      <textarea ng-readonly="isReadOnly">{{isEdit ? recipeEditing.description : ''}} </textarea>
     </p>
   </div>
 </div>
@@ -75,7 +75,8 @@
       <!-- TODO Add directives to this select element to bind its value 
         to the recipe model's `category` property and to populate the list
         with the categories from the database. -->
-      <select ng-model="categorySelected" ng-options="category.name for category in categories">
+      <select ng-model="categorySelected" ng-options="category.name for category in categories"
+              ng-disabled="isReadOnly">
         <option value="">All Categories</option>
       </select>
     </p>
@@ -93,7 +94,7 @@
     <p>
       <!-- TODO Add a directive to this input element to bind its value 
         to the recipe model's `prepTime` property. -->
-      <input type="number" value="{{isEdit ? recipeEditing.prepTime : ''}}">
+      <input type="number" value="{{isEdit ? recipeEditing.prepTime : ''}}" ng-readonly="isReadOnly">
     </p>
   </div>
 </div>
@@ -109,7 +110,7 @@
     <p>
       <!-- TODO Add a directive to this input element to bind its value 
         to the recipe model's `cookTime` property. -->
-      <input type="number" value="{{isEdit ? recipeEditing.cookTime : ''}}">
+      <input type="number" value="{{isEdit ? recipeEditing.cookTime : ''}}" ng-readonly="isReadOnly">
     </p>
   </div>
 </div>
@@ -146,7 +147,7 @@
           to the recipe ingredient model's `foodItem` property and to 
           populate the list with the food items from the database. -->
         <select ng-model="currentFoodItem" ng-options="foodItem.name for foodItem in foodItems track by foodItem.name" 
-                ng-init="currentFoodItem.name = ingredient.foodItem">
+                ng-init="currentFoodItem.name = ingredient.foodItem" ng-disabled="isReadOnly">
           <option value="">{{isEditing ? ingredient.foodItem : 'Select Item'}}</option>
         </select>
       </p>
@@ -155,14 +156,14 @@
       <p>
         <!-- TODO Add a directive to this input element to bind its value 
           to the recipe ingredient model's `condition` property. -->
-        <input type="text" value="{{isEdit ? ingredient.condition : ''}}">
+        <input type="text" value="{{isEdit ? ingredient.condition : ''}}" ng-readonly="isReadOnly">
       </p>
     </div>
     <div class="grid-15">
       <p>
         <!-- TODO Add a directive to this input element to bind its value 
           to the recipe ingredient model's `amount` property. -->
-        <input type="text" value="{{isEdit ? ingredient.amount : ''}}">
+        <input type="text" value="{{isEdit ? ingredient.amount : ''}}" ng-readonly="isReadOnly">
       </p>
     </div>
     <div class="grid-5 pad-top">
@@ -178,7 +179,7 @@
     <p>
       <!-- TODO Add a directive to this button in order to handle 
         when the user clicks to add a new recipe ingredient. -->
-      <button ng-click="addIngredient()">+ Add Another Ingredient</button>
+      <button ng-if="!isReadOnly" ng-click="addIngredient()">+ Add Another Ingredient</button>
     </p>
   </div>
 
@@ -205,7 +206,7 @@
         <!-- TODO Add a directive to this input element to bind its value 
           to the recipe step model's `description` property.
            THIS used to be an input!!!-->
-        <textarea >{{isEdit ? step.description : ''}}</textarea>
+        <textarea ng-readonly="isReadOnly">{{isEdit ? step.description : ''}}</textarea>
       </p>
     </div>
     <div class="grid-5 pad-top">
@@ -221,7 +222,7 @@
     <p>
      <!-- TODO Add a directive to this button in order to handle 
        when the user clicks to add a new recipe step. -->
-     <button ng-click="addStep()">+ Add Another Step</button>
+     <button ng-if="!isReadOnly" ng-click="addStep()">+ Add Another Step</button>
     </p>
   </div>
 

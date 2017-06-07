@@ -1,17 +1,19 @@
 angular.module("app", ['ngRoute'])
-	.controller('RecipesController', function($scope, dataService, $location){
+	.controller('RecipesController', function($scope, dataService, $location, sharedDataService){
 				
 		//function used to change route path to /add.
 		$scope.addRecipe = function( ){
+			sharedDataService.setReadOnly(false);
 			$location.path('/add');
 		};
 		$scope.editRecipe = function(path){
-			//console.log("got into the edit recipe function");
-			//console.log("path is" +path);
-			
-			//console.log(result[0]);
-			//dataService.setRecipeData(result[0]);
+			sharedDataService.setReadOnly(false);
 			$location.path('/edit/'+path);
+		};
+		
+		$scope.viewRecipe = function(path){
+			sharedDataService.setReadOnly(true);
+			$location.path('/'+path);
 		};
 		
 		
@@ -49,16 +51,33 @@ angular.module("app", ['ngRoute'])
 		
 		
 	})
-	.controller('RecipeDetailController', function($scope, $location, dataService){
+	.controller('RecipeDetailController', function($scope, $location, dataService, sharedDataService){
 		//console.log("hit the Recipe Detail Controller?");
 
 		//Function used to change Route Path to Index.
 		$scope.returnHome = function(){
+			sharedDataService.setReadOnly(false);
 			$location.path('/');
 		};
 		
+		
+		
 		$scope.onLoad = function(){
 			var param = $location.path();
+			
+			/*
+			REaaaaaaaaaaally need to refactor this code. it's messy >.>
+			 */
+			if(param.search('/add')===-1 && param.search('/edit')===-1){
+				sharedDataService.setReadOnly(true);
+			}
+			else{
+				sharedDataService.setReadOnly(false);
+			}
+			$scope.isReadOnly = sharedDataService.getReadOnly();
+			
+			console.log($scope.isReadOnly);
+			
 			if(param.search("/add")===-1){
 				
 				console.log("we are in the edit");
@@ -81,6 +100,29 @@ angular.module("app", ['ngRoute'])
 				$scope.isEdit = false;
 				console.log("we are in the add");
 				
+				var recipe =
+					{
+						name: '',
+						description: '',
+						category: '',
+						prepTime: null,
+						cookTime: null,
+						ingredients: [
+							{
+								foodItem: '',
+								condition: '',
+								amount: ''
+							}
+						],
+						steps: [ 
+							{
+								description: ''
+							}
+						],
+					};
+				$scope.recipeEditing = recipe;
+				//Need to instantiate a full array here!!!!! of the recipe object.....
+				console.log($scope.recipeEditing);
 			}
 			
 		};
@@ -113,6 +155,15 @@ angular.module("app", ['ngRoute'])
 			$scope.recipeEditing.ingredients.push(obj);
 		};
 		
+		$scope.addStep = function() {
+			var obj = { description: ''};
+			$scope.recipeEditing.steps.push(obj);
+		};
+		
+		$scope.deleteStep = function(index){
+			$scope.recipeEditing.steps.splice(index, 1);
+		}
+		
 
 		
 		
@@ -143,6 +194,17 @@ angular.module("app", ['ngRoute'])
 			console.log("The ingredient has been deleted!");
 			
 			//Will need to communicate with database eventually in here!!
-		}
+		};
 		
+		
+	})
+	.service('sharedDataService', function(){
+		var isReadOnly = false;
+		this.setReadOnly = function(set){
+			isReadOnly = set;
+		};
+		
+		this.getReadOnly = function(){
+			return isReadOnly;
+		}
 	});
