@@ -1,18 +1,31 @@
 angular.module("app", ['ngRoute'])
 	.controller('RecipesController', function($scope, dataService, $location){
 				
-		/*
-		Used to change the route Path.
-		 */
+		//function used to change route path to /add.
 		$scope.addRecipe = function( ){
 			$location.path('/add');
+		};
+		$scope.editRecipe = function(path){
+			console.log("got into the edit recipe function");
+			console.log("path is" +path);
+			$location.path('/edit/'+path);
 		};
 		
 		$scope.detectChange = function(){
 			//console.log("detected Change");
-			console.log($scope.recipes.category);
-			$scope.recipes.catetory = false;
+			console.log($scope.currentCategory.name);
 			
+			//Loops through comparing the recipes to the categories to check if any recipe exist in that category.
+			for(var i=0; i<$scope.recipes.length; i++){
+				if($scope.currentCategory.name === $scope.recipes[i].category) {
+					//If finds one, sets isRecipes to true and returns
+					$scope.isRecipes = true;
+					return;
+				}
+			}
+			//If these lines hit. No recipes matching category found, can set to false and return;
+			$scope.isRecipes = false;
+			return;
 		};
 		
 		dataService.getCategories(function(response){
@@ -32,9 +45,8 @@ angular.module("app", ['ngRoute'])
 	})
 	.controller('RecipeDetailController', function($scope, $location){
 		console.log("hit the Recipe Detail Controller?");
-		/*
-		 Used to change the route Path.
-		 */
+
+		//Function used to change Route Path to Index.
 		$scope.returnHome = function(){
 			$location.path('/');
 		};
