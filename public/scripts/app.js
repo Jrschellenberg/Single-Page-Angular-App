@@ -96,6 +96,23 @@ angular.module("app", ['ngRoute'])
 		});
 		
 		
+		$scope.deleteIngredient = function(ingredient, index){
+		//	dataService.deleteIngredient(ingredient);
+			$scope.recipeEditing.ingredients.splice(index, 1);
+			
+			//console.log($scope.recipeEditing);
+		};
+		
+		$scope.addIngredient = function(){
+			var obj =
+			{
+				foodItem: '',
+				condition: '',
+				amount: ''
+			};
+			$scope.recipeEditing.ingredients.push(obj);
+		};
+		
 
 		
 		
@@ -120,5 +137,12 @@ angular.module("app", ['ngRoute'])
 			$http.get('http://localhost:5000/api/fooditems')
 				.then(callback)
 		};
+		
+		
+		this.deleteIngredient = function(ingredient){
+			console.log("The ingredient has been deleted!");
+			
+			//Will need to communicate with database eventually in here!!
+		}
 		
 	});
