@@ -70,6 +70,8 @@ angular.module("app", ['ngRoute'])
 						return obj._id == recipeId;
 					});
 					$scope.recipeEditing = result[0];
+
+					//$scope.currentFoodItem = $scope.recipeEditing.ingredients[0].foodItem;
 					console.log($scope.recipeEditing);
 				});
 				//When editing is true;
