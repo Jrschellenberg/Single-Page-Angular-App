@@ -89,6 +89,10 @@ angular.module("app", ['ngRoute'])
 			$scope.categories = response.data;
 		});
 		
+		dataService.getFoodItems(function(response){
+			$scope.foodItems = response.data;
+		});
+		
 		
 
 		
@@ -107,6 +111,11 @@ angular.module("app", ['ngRoute'])
 		
 		this.getRecipes = function(callback){
 			$http.get('http://localhost:5000/api/recipes')
+				.then(callback)
+		};
+		
+		this.getFoodItems = function(callback){
+			$http.get('http://localhost:5000/api/fooditems')
 				.then(callback)
 		};
 		
