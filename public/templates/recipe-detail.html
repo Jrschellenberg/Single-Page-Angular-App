@@ -1,9 +1,9 @@
-<div class="grid-100 row controls">
+<div class="grid-100 row controls" ng-init="onLoad()" ng-model="isEdit">
   <div class="grid-50">
     <!-- TODO Add a binding expression to display the recipe name 
       when editing a recipe. When adding a recipe, display the 
       static text 'Add New Recipe'. -->
-    <h2>Add/Edit Recipe</h2>
+    <h2>{{isEdit ? 'editing recipe' : 'Add New Recipe'}}</h2>
   </div>
   <div class="grid-50">
     <div class="flush-right">

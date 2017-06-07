@@ -6,10 +6,13 @@ angular.module("app", ['ngRoute'])
 			$location.path('/add');
 		};
 		$scope.editRecipe = function(path){
-			console.log("got into the edit recipe function");
-			console.log("path is" +path);
+			//console.log("got into the edit recipe function");
+			//console.log("path is" +path);
 			$location.path('/edit/'+path);
 		};
+		
+		
+		
 		
 		$scope.detectChange = function(){
 			//console.log("detected Change");
@@ -34,7 +37,7 @@ angular.module("app", ['ngRoute'])
 		});
 		
 		dataService.getRecipes(function(response){
-			console.log(response.data);
+			//console.log(response.data);
 			$scope.isRecipes =true;
 			$scope.recipes = response.data;
 		});
@@ -44,12 +47,29 @@ angular.module("app", ['ngRoute'])
 		
 	})
 	.controller('RecipeDetailController', function($scope, $location){
-		console.log("hit the Recipe Detail Controller?");
+		//console.log("hit the Recipe Detail Controller?");
 
 		//Function used to change Route Path to Index.
 		$scope.returnHome = function(){
 			$location.path('/');
 		};
+		
+		$scope.onLoad = function(){
+			$scope.isEdit = false;
+			var param = $location.path();
+			if(param.search("/add")===-1){
+				console.log("we are in the edit");
+				$scope.isEdit = true;
+			}
+			else{
+				console.log("we are in the add");
+				
+			}
+			
+		}
+		
+		
+		
 		
 		
 		
