@@ -1,4 +1,4 @@
-<div class="grid-100 row controls" ng-init="onLoad()" ng-model="isEdit">
+<div class="grid-100 row controls" ng-init="onLoad()" ng-model="isEdit]" ng-readonly="isReadOnly">
   <div class="grid-50">
     <!-- TODO Add a binding expression to display the recipe name 
       when editing a recipe. When adding a recipe, display the 
@@ -32,13 +32,13 @@
 </div>
 <div class="clear"></div>
 
-<div class="grid-100 row">
+<div class="grid-100 row" >
   <div class="grid-20">
     <p class="label-spacing">
       <label> Name </label>
     </p>
   </div>
-  <div class="grid-40">
+  <div class="grid-40" >
     <p>
       <!-- TODO Add a directive to this input element to bind its value 
         to the recipe model's `name` property. -->
@@ -203,8 +203,9 @@
     <div class="prefix-20 grid-75">
       <p>
         <!-- TODO Add a directive to this input element to bind its value 
-          to the recipe step model's `description` property. -->
-        <input type="text" value="{{isEdit ? step.description : ''}}">
+          to the recipe step model's `description` property.
+           THIS used to be an input!!!-->
+        <textarea >{{isEdit ? step.description : ''}}</textarea>
       </p>
     </div>
     <div class="grid-5 pad-top">
