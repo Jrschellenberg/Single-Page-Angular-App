@@ -8,6 +8,9 @@ angular.module("app", ['ngRoute'])
 		$scope.editRecipe = function(path){
 			//console.log("got into the edit recipe function");
 			//console.log("path is" +path);
+			
+			//console.log(result[0]);
+			//dataService.setRecipeData(result[0]);
 			$location.path('/edit/'+path);
 		};
 		
@@ -16,7 +19,7 @@ angular.module("app", ['ngRoute'])
 		
 		$scope.detectChange = function(){
 			//console.log("detected Change");
-			console.log($scope.currentCategory.name);
+			//console.log($scope.currentCategory.name);
 			
 			//Loops through comparing the recipes to the categories to check if any recipe exist in that category.
 			for(var i=0; i<$scope.recipes.length; i++){
@@ -46,7 +49,7 @@ angular.module("app", ['ngRoute'])
 		
 		
 	})
-	.controller('RecipeDetailController', function($scope, $location){
+	.controller('RecipeDetailController', function($scope, $location, dataService){
 		//console.log("hit the Recipe Detail Controller?");
 
 		//Function used to change Route Path to Index.
@@ -55,18 +58,39 @@ angular.module("app", ['ngRoute'])
 		};
 		
 		$scope.onLoad = function(){
-			$scope.isEdit = false;
 			var param = $location.path();
 			if(param.search("/add")===-1){
+				
 				console.log("we are in the edit");
-				$scope.isEdit = true;
+				dataService.getRecipes(function(response){
+					$scope.isEdit = true;
+					$scope.recipeEditing = response.data;
+					var recipeId = param.substring(param.lastIndexOf('/')+1, param.length);
+					var result = $scope.recipeEditing.filter(function(obj){
+						return obj._id == recipeId;
+					});
+					$scope.recipeEditing = result[0];
+					console.log($scope.recipeEditing);
+				});
+				//When editing is true;
+				
 			}
 			else{
+				$scope.isEdit = false;
 				console.log("we are in the add");
 				
 			}
 			
-		}
+		};
+		
+		
+		dataService.getCategories(function(response){
+			//console.log(response.data);
+			$scope.categories = response.data;
+		});
+		
+		
+
 		
 		
 		
@@ -75,6 +99,7 @@ angular.module("app", ['ngRoute'])
 		
 	})
 	.service('dataService', function($http){
+		
 		this.getCategories = function(callback){
 			$http.get('http://localhost:5000/api/categories')
 				.then(callback)
