@@ -149,6 +149,8 @@ angular.module("app", ['ngRoute'])
 			$scope.recipeName = currentRecipe.name;
 			$scope.recipeDescription = currentRecipe.description;
 			$scope.categorySelected = currentRecipe.category;
+			console.log($scope.categorySelected);
+			$scope.categorySelected = currentRecipe.category;
 			$scope.recipeCookTime = currentRecipe.cookTime;
 			$scope.recipePrepTime = currentRecipe.prepTime;
 			$scope.recipeIngredients = [];
@@ -177,11 +179,20 @@ angular.module("app", ['ngRoute'])
 		
 		dataService.getCategories(function(response){
 			//console.log(response.data);
-			$scope.categories = response.data;
+			$scope.categories = [];
+			for(var i=0; i<response.data.length; i++){
+				$scope.categories[i] = response.data[i].name;
+			}
+			//$scope.categories = response.data;
+			console.log($scope.categories);
 		});
 		
 		dataService.getFoodItems(function(response){
-			$scope.foodItems = response.data;
+			$scope.foodItems =[];
+			for(var i=0; i<response.data.length; i++){
+				$scope.foodItems[i] = response.data[i].name;
+			}
+			//$scope.foodItems = response.data;
 		});
 		
 		

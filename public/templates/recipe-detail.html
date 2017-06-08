@@ -83,7 +83,7 @@
       
       
       
-      <select ng-model="categorySelected" ng-options="category.name for category in categories track by category.name"
+      <select ng-model="categorySelected" ng-options="category for category in categories track by category"
               ng-disabled="isReadOnly">
         <option value="">{{isEditing ? categorySelected : 'All Categories'}}</option>
       </select>
@@ -154,8 +154,8 @@
         <!-- TODO Add directives to this select element to bind its value 
           to the recipe ingredient model's `foodItem` property and to 
           populate the list with the food items from the database. -->
-        <select ng-model="currentFoodItem" ng-options="foodItem.name for foodItem in foodItems track by foodItem.name" 
-                ng-init="currentFoodItem.name = ingredient.foodItem" ng-disabled="isReadOnly">
+        <select ng-model="ingredient.foodItem" ng-options="foodItem for foodItem in foodItems" 
+                 ng-disabled="isReadOnly">
           <option value="">{{isEditing ? ingredient.foodItem : 'Select Item'}}</option>
         </select>
       </p>
