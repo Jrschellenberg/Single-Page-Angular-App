@@ -47,6 +47,15 @@ angular.module("app", ['ngRoute'])
 			$scope.recipes = response.data;
 		});
 		
+		$scope.deleteRecipe = function(id, index){
+			dataService.deleteRecipe(function(){
+				//console.log("The recipe was deleted");
+				//This line removes recipe from the view. Only if sucessfully removed from Db!
+				$scope.recipes.splice(index, 1);
+				return;
+			},id);
+		}
+		
 		
 		
 		
@@ -195,6 +204,12 @@ angular.module("app", ['ngRoute'])
 			
 			//Will need to communicate with database eventually in here!!
 		};
+		
+		this.deleteRecipe = function(callback, id){
+			$http.delete("/api/recipes/"+id)
+				.then(callback);
+		};
+		
 		
 		
 	})
