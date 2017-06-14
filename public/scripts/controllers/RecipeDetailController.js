@@ -4,57 +4,55 @@
 'use strict';
 
 angular.module('app')
-.controller('RecipeDetailController', function($scope, $location, dataService, sharedDataService){
+.controller('RecipeDetailController', function($scope, $location, dataService, sharedDataService, $routeParams){
 	//console.log("hit the Recipe Detail Controller?");
 	
-	//Function used to change Route Path to Index.
+	//Function used with ng-click to change Route Path to Index.
 	$scope.returnHome = function(){
 		sharedDataService.setReadOnly(false);
 		$location.path('/');
 	};
 	
 	
-	
+	/*
+	Function used when the page loads to determine how to render the page given certain parameters
+	 */
 	$scope.onLoad = function(){
-		var param = $location.path();
+		//console.log($routeParams.id);
+		//console.log($routeParams.edit);
+
 		
 		/*
 		 REaaaaaaaaaaally need to refactor this code. it's messy >.>
 		 */
-		if(param.search('/add')===-1 && param.search('/edit')===-1){
+		
+		//Do this if it is not in edit or add mode
+		if($routeParams.view === "view-recipe"){
 			sharedDataService.setReadOnly(true);
 		}
 		else{
 			sharedDataService.setReadOnly(false);
 		}
 		$scope.isReadOnly = sharedDataService.getReadOnly();
+
 		
-		console.log($scope.isReadOnly);
-		
-		if(param.search("/add")===-1){
-			
-			console.log("we are in the edit");
+		//do this if it is edit mode or viewing recipe mode.
+		if($routeParams.view === "edit-recipe" || $routeParams.view ==="view-recipe"){
+			var param = $location.path();
 			var recipeId = param.substring(param.lastIndexOf('/')+1, param.length);
 			
 			dataService.getRecipe(function(response){
 				$scope.isEdit = true;
 				$scope.recipeEditing = response.data;
-				//console.log($scope.recipeEditing);
 				
-				//$scope.recipeName = $scope.recipeEditing.name;
-				
-				console.log("before entering initialize mode values");
 				$scope.initializeModelValues($scope.recipeEditing);
 				
 				
 			},recipeId);
 			
-			
-			
-			//When editing is true;
-			
 		}
-		else{
+		//do this when add mode.
+		else if($routeParams.view ==="add-recipe"){
 			$scope.isEdit = false;
 			console.log("we are in the add");
 			var recipe =
@@ -80,6 +78,11 @@ angular.module('app')
 			$scope.recipeEditing = recipe;
 			//Need to instantiate a full array here!!!!! of the recipe object.....
 			console.log($scope.recipeEditing);
+		}
+		else{
+			console.log("We hit an ERROR!!!");
+			
+			//handle error here.
 		}
 	};
 	
@@ -154,11 +157,11 @@ angular.module('app')
 	
 	$scope.addStep = function() {
 		var obj = { description: ''};
-		$scope.recipeEditing.steps.push(obj);
+		$scope.recipeSteps.push(obj);
 	};
 	
 	$scope.deleteStep = function(index){
-		$scope.recipeEditing.steps.splice(index, 1);
+		$scope.recipeSteps.splice(index, 1);
 	};
 	
 	

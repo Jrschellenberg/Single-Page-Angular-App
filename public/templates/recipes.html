@@ -14,7 +14,7 @@
     <div class="flush-right">
       <!-- TODO Add a directive to this button in order to handle 
         when the user clicks to add a new recipe. -->
-      <button ng-click="addRecipe()">+ Add Recipe</button>
+      <button ng-click="handleClick('add-recipe')">+ Add Recipe</button>
     </div>
   </div>
 </div>
@@ -35,7 +35,7 @@
   <!-- TODO Replace this anchor element's href attribute with a 
     directive so that you can route the user to the Recipe Detail 
     screen when they click on a row. -->
-  <a href="" ng-click="viewRecipe(recipe._id)">
+  <a href="" ng-click="handleClick('view-recipe/'+recipe._id)">
     <div class="grid-70">
       <p> {{recipe.name}}
         <!-- TODO Add binding expressions here in order to 
@@ -50,7 +50,7 @@
           <!-- TODO Replace this anchor element's href attribute with a 
             directive so that you can route the user to the Recipe Detail 
             screen when they click on the 'Edit' link. -->
-          <a href="" ng-click="editRecipe(recipe._id)"> <img src="images/edit.svg" height="12px"> Edit </a>
+          <a href="" ng-click="handleClick('edit-recipe/'+recipe._id)"> <img src="images/edit.svg" height="12px"> Edit </a>
           <!-- TODO Add a directive to this anchor element so that you can 
             delete the recipe when the user clicks on the 'Delete' link. -->
           <a class="no-action-link" ng-click="deleteRecipe(recipe._id, $index)"> <img src="images/delete.svg" height="12px"> Delete </a>

@@ -17,7 +17,7 @@
 
    function config($routeProvider) {
      $routeProvider
-       .when('/edit/:id', {
+       .when('/:view/:id', {
          controller: 'RecipeDetailController',
          controllerAs: 'vm',
          templateUrl: 'templates/recipe-detail.html'

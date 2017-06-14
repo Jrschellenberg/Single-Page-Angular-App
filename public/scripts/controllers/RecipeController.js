@@ -5,18 +5,7 @@
 angular.module('app')
 .controller('RecipesController', function($scope, dataService, $location, sharedDataService){
 	
-	//function used to change route path to /add.
-	$scope.addRecipe = function( ){
-		sharedDataService.setReadOnly(false);
-		$location.path('/add');
-	};
-	$scope.editRecipe = function(path){
-		sharedDataService.setReadOnly(false);
-		$location.path('/edit/'+path);
-	};
-	
-	$scope.viewRecipe = function(path){
-		sharedDataService.setReadOnly(true);
+	$scope.handleClick = function(path){
 		$location.path('/'+path);
 	};
 	
@@ -24,7 +13,7 @@ angular.module('app')
 	
 	
 	$scope.detectChange = function(){
-		//If cataegory is null ie. select all, get all recipes again.
+		//If category is null ie. select all, get all recipes again.
 		if($scope.currentCategory == null){
 			dataService.getRecipes(function(response){
 				//console.log(response.data);

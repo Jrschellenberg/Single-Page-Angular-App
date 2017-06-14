@@ -208,7 +208,7 @@
 
   <!-- TODO Add a directive to this div element so that it repeats 
     for each recipe step to display. -->
-  <div class="step-row" ng-repeat="step in recipeEditing.steps">
+  <div class="step-row" ng-repeat="step in recipeSteps track by $index">
     <div class="prefix-20 grid-75">
       <p>
         <!-- TODO Add a directive to this input element to bind its value 
