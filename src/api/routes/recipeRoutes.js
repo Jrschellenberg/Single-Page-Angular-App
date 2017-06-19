@@ -20,12 +20,12 @@ var recipeFields = {
   },
   prepTime: {
     required: false,
-    dataType: 'string',
+    dataType: 'number',
     displayName: 'Prep Time'
   },
   cookTime: {
     required: false,
-    dataType: 'string',
+    dataType: 'number',
     displayName: 'Cook Time'
   },
   ingredients: {

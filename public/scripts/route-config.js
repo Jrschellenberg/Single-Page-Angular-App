@@ -22,12 +22,7 @@
          controllerAs: 'vm',
          templateUrl: 'templates/recipe-detail.html'
        })
-       .when('/:id', {
-         controller: 'RecipeDetailController',
-         controllerAs: 'vm',
-         templateUrl: 'templates/recipe-detail.html'
-       })
-       .when('/add', {
+       .when('/:view', {
          controller: 'RecipeDetailController',
          controllerAs: 'vm',
          templateUrl: 'templates/recipe-detail.html'

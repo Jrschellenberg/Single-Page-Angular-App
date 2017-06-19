@@ -5,7 +5,6 @@
 angular.module('app')
 .controller('RecipesController', function($scope, dataService, $location, sharedDataService){
 	
-	
 	/*
 	 * function used with loading the recipes Page. Initializes $scope.recipes with all available recipes.
 	 */

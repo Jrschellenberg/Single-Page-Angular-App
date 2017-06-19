@@ -118,7 +118,7 @@
     <p>
       <!-- TODO Add a directive to this input element to bind its value 
         to the recipe model's `cookTime` property. -->
-      <input ng-model="recipeCookTime" type="number" value="{{isEdit ? recipeCookTime : ''}}" ng-readonly="isReadOnly">
+      <input type="number" string-to-number ng-model="recipeCookTime" value="{{isEdit ? recipeCookTime : ''}}" ng-readonly="isReadOnly">
     </p>
   </div>
 </div>
