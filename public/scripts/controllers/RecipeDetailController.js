@@ -64,37 +64,6 @@ angular.module('app')
 		$scope.recipeSteps.splice(index, 1);
 	};
 	
-	$scope.handleSaveRecipe = function(){
-		$scope.isEdit ? $scope.saveEditRecipe() : $scope.saveAddedRecipe();
-	};
-	
-	$scope.saveEditRecipe = function(){
-		$scope.saveRecipe();
-		
-		//console.log('saving the edited recipe');
-		//console.log($scope.recipeName);
-		//console.log($scope.recipeDescription);
-		//console.log($scope.categorySelected);
-		//console.log($scope.recipePrepTime);
-		//console.log($scope.recipeCookTime);
-		//
-		//for(var i=0; i<$scope.recipeIngredients.length; i++){
-		//	console.log($scope.recipeIngredients[i].foodItem);
-		//	console.log($scope.recipeIngredients[i].condition);
-		//	console.log($scope.recipeIngredients[i].amount);
-		//}
-		//for(var i=0; i<$scope.recipeSteps.length; i++){
-		//	console.log($scope.recipeSteps[i].description);
-		//}
-	};
-	
-	$scope.saveAddedRecipe = function(){
-		console.log('saving the added recipe');
-	};
-	
-	
-	
-	
 	
 	$scope.initializeModelValues = function(currentRecipe){
 		$scope.recipeName = currentRecipe.name;
@@ -183,20 +152,29 @@ angular.module('app')
 			steps: $scope.recipeSteps
 			
 		};
-		var url= '/api/recipes/'+$routeParams.id;
-		console.log(url);
 		data = JSON.stringify(data);
-		console.log(data);
-		
-		dataService.putRecipe(function(response){
-			console.log("got into promise of put method");
-			console.log(response.data);
-			$scope.returnHome();
-		},url, data);
 		
 		
-		
+		var url = $scope.isEdit ? '/api/recipes/'+$routeParams.id : '/api/recipes';
+
+		if($scope.isEdit) {
+			dataService.putRecipe(function (response) {
+				console.log("got into promise of put method");
+				console.log(response.data);
+				$scope.returnHome();
+			}, url, data);
+		}
+		else{
+			dataService.postRecipe(function(response){
+				console.log("got into promise of hte POST method");
+				$scope.returnHome();
+			}, url, data);
+		}
+			
 	};
+	
+	
+	
 		
 	
 	dataService.getFoodItems(function(response){

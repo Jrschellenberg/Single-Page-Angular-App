@@ -45,11 +45,13 @@ angular.module('app')
 		};
 		
 		this.putRecipe = function(callback, url, data){
-			console.log("right before put request....");
-			console.log(url);
-			console.log(data);
 			$http.put(url, data)
 				.then(callback);
-		}
+		};
+		
+		this.postRecipe = function(callback, url, data){
+			$http.post(url, data)
+				.then(callback);
+		};
 		
 	});
