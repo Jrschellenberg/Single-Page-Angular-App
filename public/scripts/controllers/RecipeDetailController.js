@@ -191,6 +191,7 @@ angular.module('app')
 		dataService.putRecipe(function(response){
 			console.log("got into promise of put method");
 			console.log(response.data);
+			$scope.returnHome();
 		},url, data);
 		
 		
