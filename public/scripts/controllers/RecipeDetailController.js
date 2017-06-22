@@ -15,6 +15,9 @@ angular.module('app')
 	Function used when the page loads to determine how to render the page given certain parameters
 	 */
 	$scope.onLoad = function(){
+//		$scope.recipeValidationMessages = {};
+		$scope.isRecipeValidated = true;
+		
 		sharedDataService.setReadOnly(false);		
 		//Do this if it is not in edit or add mode
 		if($routeParams.view === "view-recipe"){
@@ -141,6 +144,96 @@ angular.module('app')
 	
 	
 	
+	//Use ng-messages?
+	$scope.validateForm = function(data){
+		
+		$scope.recipeValidationMessages = [];
+		$scope.isRecipeValidated = true;
+				
+		for(var key in data){
+			if(data.hasOwnProperty(key)){
+				
+				console.log(data[key]);
+				console.log(data[key].tagName);
+				
+				if(data[key] === null || data[key] === ''){
+					validateComponent(key, "requires a value");
+					continue;
+				}
+				else if(key !='description' && data[key].length > 30){
+					validateComponent(key, "value cannot exceed 30 characters in length");
+					continue;
+				}
+				else if(key == 'description' && data[key].length > 150){
+					validateComponent(key, "value cannot exceed 150 characters in length");
+					continue;
+				}
+				
+				//put conditional check statements to array starting with most prioritized first, working down to least
+				
+				console.log(data[key] instanceof Array);
+				
+				if(data[key] instanceof Array){
+					for(var i=0; i<data[key].length; i++){
+						for(var subKey in data[key][i]){
+							if(data[key][i].hasOwnProperty(subKey)){
+								//put conditional check statements to array starting with most prioritized first, working down to least
+								
+								if(data[key][i][subKey] === null || data[key][i][subKey] === ''){
+									validateComponent(subKey, "requires a value");
+									continue;
+								}
+								else if(subKey !='description' && data[key][i][subKey].length > 30){
+									validateComponent(subKey, "value cannot exceed 30 characters in length");
+									continue;
+								}
+								else if(subKey == 'description' && data[key][i][subKey].length > 150){
+									validateComponent(subKey, "value cannot exceed 150 characters in length");
+									continue;
+								}
+								
+								console.log(data[key][i][subKey]);
+								
+								console.log(data[key][i].length);
+							}
+						}
+					}
+					
+					console.log(key + " is an array");
+				}
+				
+			}
+			
+		
+			
+		}
+		
+		
+		//Need a loop to iterate over all of the properties,
+		
+		//check if property is array 
+			//if it is, loop over that array
+		
+		//check for min/max lengths first, set those messages
+		
+		//end checks are more priority, overwrite the older checks.
+		
+		
+		return $scope.isRecipeValidated;
+		
+		function validateComponent(key, message){
+			$scope.recipeValidationMessages.push(capitalizeFirstLetter(key) + " "+message);
+			$scope.isRecipeValidated = false;
+		};
+		
+		function capitalizeFirstLetter(string) {
+			return string.charAt(0).toUpperCase() + string.slice(1);
+		};
+		
+		
+		
+	};
+	
 	$scope.saveRecipe = function(){
 		var data = {
 			name: $scope.recipeName,
@@ -152,10 +245,24 @@ angular.module('app')
 			steps: $scope.recipeSteps
 			
 		};
+		
+		
+		$scope.isRecipeValidated = $scope.validateForm(data);
+		
 		data = JSON.stringify(data);
 		
 		
 		var url = $scope.isEdit ? '/api/recipes/'+$routeParams.id : '/api/recipes';
+		
+		
+		console.log($scope.isRecipeValidated);
+		
+		if(!$scope.isRecipeValidated){
+			console.log("Got into recipe not validated if");
+			//Break out of hte function, stop code block.
+			return;
+		}
+		
 
 		if($scope.isEdit) {
 			dataService.putRecipe(function (response) {
