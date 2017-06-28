@@ -10,14 +10,11 @@ angular.module('app')
 		sharedDataService.setReadOnly(false);
 		$location.path('/');
 	};
-	
 	/*
 	Function used when the page loads to determine how to render the page given certain parameters
 	 */
 	$scope.onLoad = function(){
-//		$scope.recipeValidationMessages = {};
 		$scope.isRecipeValidated = true;
-		
 		sharedDataService.setReadOnly(false);		
 		//Do this if it is not in edit or add mode
 		if($routeParams.view === "view-recipe"){
@@ -32,7 +29,7 @@ angular.module('app')
 			var recipeId = param.substring(param.lastIndexOf('/')+1, param.length);
 			$scope.initializeScopeRecipe(true, recipeId);
 		}
-		//do this when add mode.
+		//do this when in add recipe mode.
 		else if($routeParams.view ==="add-recipe"){
 			$scope.initializeScopeRecipe(false, null);
 		}
@@ -40,14 +37,22 @@ angular.module('app')
 			console.log("We hit an ERROR!!!");
 			console.log($routeParams.view);
 			
-			//handle error here.
+			//handle errors here when wrong page loaded.
 		}
 	};
 	
-	$scope.deleteIngredient = function(ingredient, index){
+	/*
+	function used to remove ingredients from the recipeIngredients array
+	@param: index - the index at which to remove from the recipeIngredients array 
+	 */
+	$scope.deleteIngredient = function(index){
 		$scope.recipeIngredients.splice(index, 1);
 	};
 	
+	/*
+	Function used to add an ingredients field to the view.
+	creates an object with the specified key names. then pushes it onto the $scope.recipeIngredients var
+	 */
 	$scope.addIngredient = function(){
 		var obj =
 		{
@@ -57,47 +62,52 @@ angular.module('app')
 		};
 		$scope.recipeIngredients.push(obj);
 	};
-	
+	//similar to addIngredients
 	$scope.addStep = function() {
 		var obj = { description: ''};
 		$scope.recipeSteps.push(obj);
 	};
-	
+	//similar to deleteIngredients
 	$scope.deleteStep = function(index){
 		$scope.recipeSteps.splice(index, 1);
 	};
 	
-	
+	/*
+	function used to populate the modal binding values in view from the services get request.
+	 */
 	$scope.initializeModelValues = function(currentRecipe){
 		$scope.recipeName = currentRecipe.name;
 		$scope.recipeDescription = currentRecipe.description;
 		$scope.categorySelected = currentRecipe.category;
-		//console.log($scope.categorySelected);
 		$scope.categorySelected = currentRecipe.category;
 		$scope.recipeCookTime = currentRecipe.cookTime;
 		$scope.recipePrepTime = currentRecipe.prepTime;
 		$scope.recipeIngredients = [];
-		//console.log("Right before the For loop...");
+		//populate the $scope.recipeIngredients variable
 		for(var i=0; i<currentRecipe.ingredients.length; i++){
 			var obj = {
 				foodItem : currentRecipe.ingredients[i].foodItem,
 				amount : currentRecipe.ingredients[i].amount,
 				condition : currentRecipe.ingredients[i].condition
 			};
+			//push the current data onto $scope.recipeIngredients
 			$scope.recipeIngredients.push(obj);
-			//console.log("hitting this line of code?");
 		}
 		$scope.recipeSteps = [];
-		
+		//similar logic as above
 		for(var i=0; i<currentRecipe.steps.length; i++){
 			var stepObj = {
 				description : currentRecipe.steps[i].description
 			};
 			$scope.recipeSteps.push(stepObj);
 		}
-		//console.log($scope.recipeIngredients);
 	};
 	
+	/*
+	used to initialize $scope.recipeEditing variable (contains the information grabbed from database
+	@param isEdit: variable used to determine if the view is in edit mode or add mode
+	@param recipeId: variable used IF view is in edit mode, it will get the recipe using this id.
+	 */
 	$scope.initializeScopeRecipe = function(isEdit, recipeId){
 		if(isEdit){
 			//console.log("Should be in the edit");
@@ -114,8 +124,6 @@ angular.module('app')
 			
 		}
 		$scope.isEdit = isEdit;
-		//$scope.initializeModelValues($scope.recipeEditing);
-		
 	};
 	
 	/*
@@ -146,8 +154,11 @@ angular.module('app')
 	};
 	
 	
-	
-	//Use ng-messages?
+/*
+This function is used to do all form validation, will prevent submission if it fails
+@param data: An object containing all of the current data entered into the fields.
+If an error is hit, sets $scope.isRecipeValidated to equal false in sub function, preventing PUT, POST request.
+ */
 	$scope.validateForm = function(data){
 		$scope.recipeValidationMessages = [];
 		$scope.isRecipeValidated = true;
@@ -215,16 +226,23 @@ angular.module('app')
 		}
 		return $scope.isRecipeValidated;   //Return variable isRecipeValidated.
 		
+		/*
+		sub function used for handling when form validation fails
+		 */
 		function validateComponent(key, message){
 			key = stringPrettify(key);
 			$scope.recipeValidationMessages.push(capitalizeFirstLetter(key) + " "+message);
 			$scope.isRecipeValidated = false;
 		};
-		
+		/*
+		function used in making keys user friendly to read
+		 */
 		function capitalizeFirstLetter(string) {
 			return string.charAt(0).toUpperCase() + string.slice(1);
 		};
-		
+		/*
+		function used to make the keys user friendly to read
+		 */
 		function stringPrettify(string){
 			//console.log(string);
 			var strArray = string.split('');
@@ -237,6 +255,10 @@ angular.module('app')
 		};
 	};
 	
+	
+	/*
+	logic used for saving a recipe.
+	 */
 	$scope.saveRecipe = function(){
 		var data = {
 			name: $scope.recipeName,
@@ -246,47 +268,32 @@ angular.module('app')
 			cookTime: $scope.recipeCookTime,
 			ingredients: $scope.recipeIngredients,
 			steps: $scope.recipeSteps
-			
 		};
-		
-		
+		//Calls the function to validate all of the forms data! if fails $scope.isRecipeValidated handles fail
 		$scope.isRecipeValidated = $scope.validateForm(data);
-		
 		data = JSON.stringify(data);
-		
-		
-		var url = $scope.isEdit ? '/api/recipes/'+$routeParams.id : '/api/recipes';
-		
-		
-		console.log($scope.isRecipeValidated);
-		
+		var url = $scope.isEdit ? '/api/recipes/'+$routeParams.id : '/api/recipes'; //build the url string based off if in edit or add mode
+
+		//If $scope.validateForm fails discontinue the function execution
 		if(!$scope.isRecipeValidated){
-			//console.log("Got into recipe not validated if");
-			//Break out of hte function, stop code block.
 			return;
 		}
-		
-
+		//if form validation passed, handle submitting the request based off if in Edit mode or Add mode.
 		if($scope.isEdit) {
 			dataService.putRecipe(function (response) {
-				//console.log("got into promise of put method");
-				//console.log(response.data);
 				$scope.returnHome();
 			}, url, data);
 		}
 		else{
 			dataService.postRecipe(function(response){
-				//console.log("got into promise of hte POST method");
 				$scope.returnHome();
 			}, url, data);
 		}
-			
 	};
 	
-	
-	
-		
-	
+	/*
+	dataService call to getFoodItems
+	 */
 	dataService.getFoodItems(function(response){
 		$scope.foodItems =[];
 		for(var i=0; i<response.data.length; i++){
@@ -295,8 +302,10 @@ angular.module('app')
 		//$scope.foodItems = response.data;
 	});
 	
+	/*
+	dataService call to get categories.
+	 */
 	dataService.getCategories(function(response){
-		//console.log(response.data);
 		$scope.categories = [];
 		for(var i=0; i<response.data.length; i++){
 			$scope.categories[i] = response.data[i].name;
@@ -304,7 +313,4 @@ angular.module('app')
 		//$scope.categories = response.data;
 		//console.log($scope.categories);
 	});
-	
-
-	
 });
