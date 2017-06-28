@@ -3,8 +3,7 @@
  */
 'use strict';
 angular.module('app')
-.controller('RecipesController', function($scope, dataService, $location, sharedDataService){
-	
+.controller('RecipesController', function($scope, dataService, $location){
 	/*
 	 * function used with loading the recipes Page. Initializes $scope.recipes with all available recipes.
 	 */
@@ -32,6 +31,11 @@ angular.module('app')
 		$scope.getRecipeCategory();
 	};
 	
+	/*
+	function used to delete recipe from the database
+	@param: index - the location of where the recipe is in the modal variable in the view
+	@param id - the id string of the recipe, used to pass to dataservice deleteRecipe call.
+	 */
 	$scope.deleteRecipe = function(id, index){
 		dataService.deleteRecipe(function(){
 			//This line removes recipe from the view. Only if sucessfully removed from Db!
@@ -41,27 +45,32 @@ angular.module('app')
 		},id);
 	};
 	
+	/*
+	function used to get the recipes
+	 */
 	$scope.getRecipes = function(){
 		dataService.getRecipes(function(response){
 			$scope.recipes = response.data;
+			//If there is no recipes in this category, set isRecipes to false(to display no recipe msg), otherwise, set it as true
 			$scope.recipes.length === 0 ? $scope.isRecipes = false : $scope.isRecipes = true;
 		});
 	};
 	
+	/*
+	function used to get the currently selected recipe category.
+	 */
 	$scope.getRecipeCategory = function(){
 		dataService.getRecipeCategory(function(response){
 			$scope.recipes = response.data;
 			//If there is no recipes in this category, set isRecipes to false(to display no recipe msg), otherwise, set it as true
 			$scope.recipes.length === 0 ? $scope.isRecipes = false : $scope.isRecipes = true;
 		}, $scope.currentCategory.name)
-		
 	};
-	
+	/*
+	Uses services to get the categories available
+	 */
 	dataService.getCategories(function(response){
-		//console.log(response.data);
 		$scope.categories = response.data;
 	});
-	
-	
 	
 });
