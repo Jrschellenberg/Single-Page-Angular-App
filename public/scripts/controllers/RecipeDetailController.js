@@ -118,6 +118,9 @@ angular.module('app')
 		
 	};
 	
+	/*
+	A function to populate the template for storing recipes.
+	 */
 	$scope.recipeTemplate = function(){
 		var recipe =
 		{
@@ -146,85 +149,71 @@ angular.module('app')
 	
 	//Use ng-messages?
 	$scope.validateForm = function(data){
-		
 		$scope.recipeValidationMessages = [];
 		$scope.isRecipeValidated = true;
-		var tempData = "";
-				
+		//Loop over all of the items from data.
 		for(var key in data){
 			if(data.hasOwnProperty(key)){
-				
-				//console.log(data[key]);
-				//console.log(data[key].tagName);
-				
+				//Checking if value is null or empty				
 				if(data[key] === null || data[key] === ''){
 					validateComponent(key, "requires a value");
 					continue;
 				}
+				//special case for if people add 'e' to the numeric field prepTime && cookTime
+				else if((key =='prepTime' || key == 'cookTime') && data[key] == undefined ){
+					validateComponent(key, "requires a numeric value");
+					continue;
+				}
+				//checking if non text area fields have length > 30
 				else if(key !='description' && data[key].length > 30){
 					validateComponent(key, "value cannot exceed 30 characters in length");
 					continue;
 				}
+				//checking if description ie text area has field > 150 characters
 				else if(key == 'description' && data[key].length > 150){
 					validateComponent(key, "value cannot exceed 150 characters in length");
 					continue;
 				}
-				
-				//put conditional check statements to array starting with most prioritized first, working down to least
-				
-				//console.log(data[key] instanceof Array);
-				
+				//checking that prepTime and cookTime fields have value > than 0 ie no - numbers
+				else if((key =='prepTime' || key == 'cookTime') && data[key] <0 ){
+					validateComponent(key, "value must be greater than 0");
+					continue;
+				}
+				//Code to check values of all the fields entered in the arrays ingredients and steps.
 				if(data[key] instanceof Array){
+					//first loop to seperate ingredients array from steps array
 					for(var i=0; i<data[key].length; i++){
+						//looping over keys of each individual array
 						for(var subKey in data[key][i]){
+							//finding only properties that matter to us
 							if(data[key][i].hasOwnProperty(subKey)){
-								//console.log("Currently on the following: "+subKey);
-								//console.log(data[key][i][subKey] === null);
-								//console.log(data[key][i][subKey].length === 0);
+								//checking if key is condition and if it is allow it to be blank. ie skip the second check
 								if(subKey === "condition" && (data[key][i][subKey] === null || data[key][i][subKey] === '')){
-									console.log("Are we landing in here by accident?");
 									continue;
 								}
+								//If the field is blank display error message
 								else if(data[key][i][subKey] === null || data[key][i][subKey].length === 0 ){
-									console.log("are we hitting this????");
 									validateComponent(key+capitalizeFirstLetter(subKey), "requires a value");
 									continue;
 								}
+								//if field is not description and is less than 30 characters, display this message
 								else if(subKey != 'description' && data[key][i][subKey].length > 30){
 									console.log(data[key][i][subKey].length);
 									validateComponent(key+capitalizeFirstLetter(subKey), "value cannot exceed 30 characters in length");
 									continue;
 								}
+								//if field is description and has field length > 150 display this message
 								else if(subKey == 'description' && data[key][i][subKey].length > 150){
 									validateComponent(key+capitalizeFirstLetter(subKey), "value cannot exceed 150 characters in length");
 									continue;
 								}
-	
 							}
 						}
 					}
-					
-					//console.log(key + " is an array");
 				}
-				
 			}
-			
-		
-			
 		}
-		
-		
-		//Need a loop to iterate over all of the properties,
-		
-		//check if property is array 
-			//if it is, loop over that array
-		
-		//check for min/max lengths first, set those messages
-		
-		//end checks are more priority, overwrite the older checks.
-		
-		
-		return $scope.isRecipeValidated;
+		return $scope.isRecipeValidated;   //Return variable isRecipeValidated.
 		
 		function validateComponent(key, message){
 			key = stringPrettify(key);
