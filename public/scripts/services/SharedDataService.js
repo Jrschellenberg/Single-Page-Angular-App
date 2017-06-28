@@ -6,6 +6,7 @@
 	
 	angular.module('app')
 		
+	//Service used to handle if view is readonly or not.
 		.service('sharedDataService', function () {
 			var isReadOnly = false;
 			this.setReadOnly = function (set) {

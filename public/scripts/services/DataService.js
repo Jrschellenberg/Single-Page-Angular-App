@@ -22,7 +22,6 @@
 					.then(callback)
 			};
 			
-			
 			this.deleteIngredient = function (ingredient) {
 				console.log("The ingredient has been deleted!");
 				
@@ -32,7 +31,6 @@
 				$http.delete("/api/recipes/" + id)
 					.then(callback);
 			};
-			
 			
 			this.getRecipeCategory = function (callback, category) {
 				$http.get('/api/recipes?category=' + category)
