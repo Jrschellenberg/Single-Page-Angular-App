@@ -100,7 +100,7 @@ angular.module('app')
 	
 	$scope.initializeScopeRecipe = function(isEdit, recipeId){
 		if(isEdit){
-			console.log("Should be in the edit");
+			//console.log("Should be in the edit");
 			dataService.getRecipe(function(response){
 				$scope.recipeEditing = response.data;
 			
@@ -108,7 +108,7 @@ angular.module('app')
 			},recipeId);
 		}
 		else{
-			console.log("we are in the add");
+			//console.log("we are in the add");
 			$scope.recipeEditing = $scope.recipeTemplate();
 			$scope.initializeModelValues($scope.recipeEditing);
 			
@@ -149,12 +149,13 @@ angular.module('app')
 		
 		$scope.recipeValidationMessages = [];
 		$scope.isRecipeValidated = true;
+		var tempData = "";
 				
 		for(var key in data){
 			if(data.hasOwnProperty(key)){
 				
-				console.log(data[key]);
-				console.log(data[key].tagName);
+				//console.log(data[key]);
+				//console.log(data[key].tagName);
 				
 				if(data[key] === null || data[key] === ''){
 					validateComponent(key, "requires a value");
@@ -171,35 +172,39 @@ angular.module('app')
 				
 				//put conditional check statements to array starting with most prioritized first, working down to least
 				
-				console.log(data[key] instanceof Array);
+				//console.log(data[key] instanceof Array);
 				
 				if(data[key] instanceof Array){
 					for(var i=0; i<data[key].length; i++){
 						for(var subKey in data[key][i]){
 							if(data[key][i].hasOwnProperty(subKey)){
-								//put conditional check statements to array starting with most prioritized first, working down to least
-								
-								if(data[key][i][subKey] === null || data[key][i][subKey] === ''){
-									validateComponent(subKey, "requires a value");
+								//console.log("Currently on the following: "+subKey);
+								//console.log(data[key][i][subKey] === null);
+								//console.log(data[key][i][subKey].length === 0);
+								if(subKey === "condition" && (data[key][i][subKey] === null || data[key][i][subKey] === '')){
+									console.log("Are we landing in here by accident?");
 									continue;
 								}
-								else if(subKey !='description' && data[key][i][subKey].length > 30){
-									validateComponent(subKey, "value cannot exceed 30 characters in length");
+								else if(data[key][i][subKey] === null || data[key][i][subKey].length === 0 ){
+									console.log("are we hitting this????");
+									validateComponent(key+capitalizeFirstLetter(subKey), "requires a value");
+									continue;
+								}
+								else if(subKey != 'description' && data[key][i][subKey].length > 30){
+									console.log(data[key][i][subKey].length);
+									validateComponent(key+capitalizeFirstLetter(subKey), "value cannot exceed 30 characters in length");
 									continue;
 								}
 								else if(subKey == 'description' && data[key][i][subKey].length > 150){
-									validateComponent(subKey, "value cannot exceed 150 characters in length");
+									validateComponent(key+capitalizeFirstLetter(subKey), "value cannot exceed 150 characters in length");
 									continue;
 								}
-								
-								console.log(data[key][i][subKey]);
-								
-								console.log(data[key][i].length);
+	
 							}
 						}
 					}
 					
-					console.log(key + " is an array");
+					//console.log(key + " is an array");
 				}
 				
 			}
@@ -222,6 +227,7 @@ angular.module('app')
 		return $scope.isRecipeValidated;
 		
 		function validateComponent(key, message){
+			key = stringPrettify(key);
 			$scope.recipeValidationMessages.push(capitalizeFirstLetter(key) + " "+message);
 			$scope.isRecipeValidated = false;
 		};
@@ -230,8 +236,16 @@ angular.module('app')
 			return string.charAt(0).toUpperCase() + string.slice(1);
 		};
 		
-		
-		
+		function stringPrettify(string){
+			//console.log(string);
+			var strArray = string.split('');
+			for(var i=0; i<strArray.length; i++){
+				if(strArray[i] === strArray[i].toUpperCase()){
+					string = string.replace(strArray[i].toUpperCase(), " "+strArray[i]);
+				}
+			}
+			return string;
+		};
 	};
 	
 	$scope.saveRecipe = function(){
@@ -258,7 +272,7 @@ angular.module('app')
 		console.log($scope.isRecipeValidated);
 		
 		if(!$scope.isRecipeValidated){
-			console.log("Got into recipe not validated if");
+			//console.log("Got into recipe not validated if");
 			//Break out of hte function, stop code block.
 			return;
 		}
@@ -266,14 +280,14 @@ angular.module('app')
 
 		if($scope.isEdit) {
 			dataService.putRecipe(function (response) {
-				console.log("got into promise of put method");
-				console.log(response.data);
+				//console.log("got into promise of put method");
+				//console.log(response.data);
 				$scope.returnHome();
 			}, url, data);
 		}
 		else{
 			dataService.postRecipe(function(response){
-				console.log("got into promise of hte POST method");
+				//console.log("got into promise of hte POST method");
 				$scope.returnHome();
 			}, url, data);
 		}
@@ -299,7 +313,7 @@ angular.module('app')
 			$scope.categories[i] = response.data[i].name;
 		}
 		//$scope.categories = response.data;
-		console.log($scope.categories);
+		//console.log($scope.categories);
 	});
 	
 

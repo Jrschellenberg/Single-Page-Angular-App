@@ -215,7 +215,7 @@
         <!-- TODO Add a directive to this input element to bind its value 
           to the recipe step model's `description` property.
            THIS used to be an input!!!-->
-        <textarea ng-readonly="isReadOnly">{{isEdit ? step.description : ''}}</textarea>
+        <textarea ng-model="step.description" ng-readonly="isReadOnly">{{isEdit ? step.description : ''}}</textarea>
       </p>
     </div>
     <div class="grid-5 pad-top">
