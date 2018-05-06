@@ -8,17 +8,17 @@
 		.service('dataService', function ($http) {
 			
 			this.getCategories = function (callback) {
-				$http.get('http://localhost:5000/api/categories')
+				$http.get('/api/categories')
 					.then(callback)
 			};
 			
 			this.getRecipes = function (callback) {
-				$http.get('http://localhost:5000/api/recipes')
+				$http.get('/api/recipes')
 					.then(callback)
 			};
 			
 			this.getFoodItems = function (callback) {
-				$http.get('http://localhost:5000/api/fooditems')
+				$http.get('/api/fooditems')
 					.then(callback)
 			};
 			
